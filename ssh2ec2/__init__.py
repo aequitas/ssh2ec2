@@ -1,9 +1,10 @@
 import argparse
+import os
+import random
+import sys
+
 import boto3
 from botocore.exceptions import ProfileNotFound
-import sys
-import random
-import os
 
 
 def get_filters(args):
@@ -140,7 +141,8 @@ def main():
         sys.exit(1)
 
     instance_dns_names = [[
-        instance['PublicDnsName'] for instance in reservation['Instances']][0]
+        instance['PublicDnsName'] or instance['PrivateIpAddress']
+        for instance in reservation['Instances']][0]
         for reservation
         in reservations['Reservations']]
     if args.all_matching_instances:
